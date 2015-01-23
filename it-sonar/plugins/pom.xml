@@ -10,9 +10,9 @@
   <packaging>pom</packaging>
 
   <properties>
-    <jdk.min.version>1.6</jdk.min.version>
-    <jdk.source.version>1.6</jdk.source.version>
-    <jdk.target.version>1.6</jdk.target.version>
+    <jdk.min.version>1.7</jdk.min.version>
+    <jdk.source.version>1.7</jdk.source.version>
+    <jdk.target.version>1.7</jdk.target.version>
   </properties>
 
   <build>
