@@ -26,6 +26,6 @@ public class UiTestSuite {
   public static final Orchestrator ORCHESTRATOR = Orchestrator.builderEnv()
     .addPlugin(ItUtils.locateTestPlugin("ui-plugin"))
     .addPlugin(ItUtils.xooPlugin())
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion","LATEST_RELEASE").addPlugin("java")
     .build();
 }

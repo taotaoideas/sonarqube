@@ -5,7 +5,6 @@
  */
 package com.sonar.it.test.suite;
 
-import com.sonar.it.ItUtils;
 import com.sonar.orchestrator.Orchestrator;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
@@ -19,6 +18,6 @@ public class TestTestSuite {
 
   @ClassRule
   public static final Orchestrator ORCHESTRATOR = Orchestrator.builderEnv()
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion", "LATEST_RELEASE").addPlugin("java")
     .build();
 }

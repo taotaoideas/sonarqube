@@ -6,7 +6,6 @@
 package com.sonar.it.event;
 
 import com.google.common.collect.Lists;
-import com.sonar.it.ItUtils;
 import com.sonar.orchestrator.Orchestrator;
 import com.sonar.orchestrator.selenium.Selenese;
 import org.junit.After;
@@ -27,7 +26,7 @@ public class EventTest {
 
   @ClassRule
   public static Orchestrator orchestrator = Orchestrator.builderEnv()
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion", "LATEST_RELEASE").addPlugin("java")
     .build();
 
   @After

@@ -36,7 +36,7 @@ public class QualityGateNotificationsTest {
   public static Orchestrator orchestrator = Orchestrator.builderEnv()
     // 1 second
     .setServerProperty("sonar.notifications.delay", "1")
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion","LATEST_RELEASE").addPlugin("java")
     .build();
 
   private static Wiser smtpServer;

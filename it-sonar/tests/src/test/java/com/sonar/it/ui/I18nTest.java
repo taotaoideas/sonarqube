@@ -21,7 +21,7 @@ public class I18nTest {
   public static Orchestrator orchestrator = Orchestrator.builderEnv()
     .addPlugin(ItUtils.locateTestPlugin("l10n-fr-pack"))
     .addPlugin(ItUtils.locateTestPlugin("self-l10ned-plugin"))
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion","LATEST_RELEASE").addPlugin("java")
     .build();
 
   @After

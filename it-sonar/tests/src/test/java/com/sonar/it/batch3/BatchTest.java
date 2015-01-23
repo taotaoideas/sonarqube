@@ -13,11 +13,7 @@ import com.sonar.orchestrator.build.MavenBuild;
 import com.sonar.orchestrator.build.SonarRunner;
 import com.sonar.orchestrator.locator.FileLocation;
 import org.apache.commons.io.FileUtils;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.wsclient.Sonar;
@@ -41,7 +37,7 @@ public class BatchTest {
 
     .addPlugin(ItUtils.locateTestPlugin("batch-plugin"))
     // Java is only used in convert_library_into_module test
-    .addPlugin(ItUtils.javaPlugin())
+    .setOrchestratorProperty("javaVersion", "LATEST_RELEASE").addPlugin("java")
 
     .build();
 
