@@ -35,7 +35,7 @@ public class ServerTest extends PerfTestCase {
       .build();
     try {
       long startupDuration = start(orchestrator);
-      assertDurationAround(startupDuration, 50000);
+      assertDurationAround(startupDuration, 42000);
 
       long shutdownDuration = stop(orchestrator);
       // can't use percent margins because logs are second-grained but not milliseconds
