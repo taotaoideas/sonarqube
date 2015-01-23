@@ -24,10 +24,13 @@ public class ServerTest extends PerfTestCase {
   public void server_startup_and_shutdown() throws Exception {
     String defaultWebJavaOptions = "-Xmx768m -XX:MaxPermSize=160m -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djruby.management.enabled=false";
     Orchestrator orchestrator = Orchestrator.builderEnv()
+      .setOrchestratorProperty("javaVersion", "LATEST_RELEASE")
+      .addPlugin("java")
+
       // See http://wiki.apache.org/tomcat/HowTo/FasterStartUp
       // Sometimes source of entropy is too small and Tomcat spends ~20 seconds on the step :
       // "Creation of SecureRandom instance for session ID generation using [SHA1PRNG]"
-      // Using /dev/urandom fixes the issue on linux
+        // Using /dev/urandom fixes the issue on linux
       .setServerProperty("sonar.web.javaOpts", defaultWebJavaOptions + " -Djava.security.egd=file:/dev/./urandom")
       .build();
     try {
