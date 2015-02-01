@@ -42,7 +42,7 @@ public class SnapshotTesting {
       .setParentId(parentSnapshot.getId())
       .setPath(parentSnapshot.getPath() == null ? Long.toString(parentSnapshot.getId()) + "." : parentSnapshot.getPath() + Long.toString(parentSnapshot.getId()) + ".")
       .setLast(true)
-      .setBuildDate(new Date());
+      .setBuildDate(new Date().getTime());
   }
 
   public static SnapshotDto createForProject(ComponentDto project) {
@@ -54,7 +54,7 @@ public class SnapshotTesting {
       .setScope(project.scope())
       .setPath("")
       .setLast(true)
-      .setBuildDate(new Date());
+      .setBuildDate(new Date().getTime());
   }
 
 }

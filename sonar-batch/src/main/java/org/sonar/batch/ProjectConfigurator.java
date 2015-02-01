@@ -36,8 +36,9 @@ import org.sonar.api.utils.SonarException;
 import org.sonar.api.utils.System2;
 
 import javax.annotation.Nullable;
-
 import java.util.Date;
+
+import static org.sonar.api.utils.DateUtils.timeToDate;
 
 public class ProjectConfigurator implements BatchComponent {
 
@@ -94,11 +95,11 @@ public class ProjectConfigurator implements BatchComponent {
       ResourceModel persistedProject = databaseSession.getSingleResult(ResourceModel.class, "key", projectKey, "enabled", true);
       if (persistedProject != null) {
         Snapshot lastSnapshot = databaseSession.getSingleResult(Snapshot.class, "resourceId", persistedProject.getId(), "last", true);
-        if (lastSnapshot != null && !lastSnapshot.getCreatedAt().before(analysisDate)) {
+        if (lastSnapshot != null && timeToDate(lastSnapshot.getCreatedAt()).before(analysisDate)) {
           throw new IllegalArgumentException(
             "'sonar.projectDate' property cannot be older than the date of the last known quality snapshot on this project. Value: '" +
               settings.getString(CoreProperties.PROJECT_DATE_PROPERTY) + "'. " +
-              "Latest quality snapshot: '" + DateUtils.formatDateTime(lastSnapshot.getCreatedAt())
+              "Latest quality snapshot: '" + DateUtils.formatDateTime(timeToDate(lastSnapshot.getCreatedAt()))
               + "'. This property may only be used to rebuild the past in a chronological order.");
         }
       }
