@@ -50,7 +50,7 @@ class Api::DashboardConfiguration
 
   def from_datetime
     if selected_period? && @snapshot
-      @snapshot.period_datetime(@period_index)
+      Time.at(@snapshot.period_datetime(@period_index)/1000)
     else
       nil
     end

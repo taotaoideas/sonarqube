@@ -73,7 +73,7 @@ module DashboardHelper
     if snapshot.project_snapshot
       mode = snapshot.period_mode(index)
       mode_param = snapshot.period_param(index)
-      date = localize(snapshot.period_datetime(index).to_date) if snapshot.period_datetime(index)
+      date = localize(Time.at(snapshot.period_datetime(index)/1000)) if snapshot.period_datetime(index)
       Api::Utils.java_facade.getPeriodLabel(mode, mode_param, date) if mode
     end
   end

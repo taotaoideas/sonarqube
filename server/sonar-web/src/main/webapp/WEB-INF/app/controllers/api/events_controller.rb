@@ -158,7 +158,7 @@ class Api::EventsController < Api::ApiController
           :category => category,
           :snapshot => snapshot,
           :resource_id => snapshot.project_id,
-          :event_date => snapshot.created_at
+          :event_date => Time.at(snapshot.created_at/1000)
         )
         event.save!
         event_to_return = event if snapshot.project_id = @resource.id

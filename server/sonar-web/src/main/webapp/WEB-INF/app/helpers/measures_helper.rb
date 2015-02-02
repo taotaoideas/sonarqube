@@ -54,7 +54,7 @@ module MeasuresHelper
     elsif column.key=='short_name'
       "#{qualifier_icon(row.snapshot)} #{link_to(h(row.snapshot.resource.name(false)), {:controller => 'dashboard', :id => row.snapshot.resource_id}, {:title => h(row.snapshot.resource.key)})}"
     elsif column.key=='date'
-      human_short_date(row.snapshot.created_at)
+      human_short_date(Time.at(row.snapshot.created_at/1000))
     elsif column.key=='project_creation_date'
       human_short_date(row.snapshot.resource.created_at) if row.snapshot.resource.created_at
     elsif column.key=='key'

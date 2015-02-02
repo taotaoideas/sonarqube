@@ -42,7 +42,7 @@
       current_year = nil
       current_month = nil
       @snapshots.each_with_index do |snapshot, index|
-        time = snapshot.created_at
+        time = Time.at(snapshot.created_at/1000)
         version_event = snapshot.event(EventCategory::KEY_VERSION)
         alert_event = snapshot.event(EventCategory::KEY_ALERT)
         profile_event = snapshot.event(EventCategory::KEY_PROFILE)

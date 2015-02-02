@@ -88,7 +88,7 @@
            event = snapshot.event('Version')
       %>
         <th nowrap="nowrap" style="vertical-align:top;text-align: right;font-size: 10px">
-          <%= l snapshot.created_at.to_date -%>
+          <%= l Time.at(snapshot.created_at/1000) -%>
           <br/>
           <%= event.name unless event==nil -%>
         </th>

@@ -9,6 +9,6 @@
     resource: '<%= @resource.uuid -%>',
     resourceQualifier: '<%= @resource.qualifier -%>',
     resourceName: '<%= @resource.name -%>',
-    periodDate: <% if @period %>'<%= @snapshot.period_datetime(@period) -%>'<% else %>null<% end %>
+    periodDate: <% if @period %>'<%= Time.at(@snapshot.period_datetime(@period)/1000) -%>'<% else %>null<% end %>
   };
 </script>

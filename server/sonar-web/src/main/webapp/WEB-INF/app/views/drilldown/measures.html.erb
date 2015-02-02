@@ -124,7 +124,7 @@
     metric: <% if @metric %>'<%= @metric.key -%>'<% else %>null<% end %>,
     rule: null,
     severity: null,
-    period: <% if @period %>'<%= @snapshot.period_datetime(@period) -%>'<% else %>null<% end %>
+    period: <% if @period %>'<%= Time.at(@snapshot.period_datetime(@period)/1000) -%>'<% else %>null<% end %>
   };
 </script>
 

@@ -46,7 +46,7 @@ class Sonar::TimemachineRow
       values=[]
       @measure_by_sid.values.each do |measure|
         # date.to_f does not works under oracle
-        values << measure.snapshot.created_at.to_s(:number)
+        values << Time.at(measure.snapshot.created_at / 1000).to_s(:number)
         values << (measure.value.nil? ? 0 : measure.value)
       end
       "/chart?cht=sl&chdi=80x15&chv=" + values*',' + '&.png'

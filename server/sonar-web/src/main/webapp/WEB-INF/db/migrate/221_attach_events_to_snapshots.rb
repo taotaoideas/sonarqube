@@ -39,13 +39,13 @@ class AttachEventsToSnapshots < ActiveRecord::Migration
         next_snapshot = Snapshot.find(:first, :conditions => ["created_at >= ? AND project_id = ?", event.event_date, event.resource_id], :order => :created_at)
         if next_snapshot && (event.category!='Version' || !has_category?(next_snapshot, 'Version'))
           event.snapshot_id = next_snapshot.id
-          event.event_date = next_snapshot.created_at
+          event.event_date = Time.at(next_snapshot.created_at)
           event.save
         else
           previous_snapshot = Snapshot.find(:last, :conditions => ["created_at <= ? AND project_id = ?", event.event_date, event.resource_id], :order => :created_at)
           if previous_snapshot && (event.category!='Version' || !has_category?(previous_snapshot,'Version'))
             event.snapshot_id = previous_snapshot.id
-            event.event_date = previous_snapshot.created_at
+            event.event_date = Time.at(previous_snapshot.created_at)
             event.save
           end
         end

@@ -308,7 +308,7 @@ class ProjectController < ApplicationController
           snapshots.each do |snapshot|
             event = Event.create!(:name => params[:version_name], :snapshot => snapshot,
                                   :resource_id => snapshot.project_id, :category => EventCategory::KEY_VERSION,
-                                  :event_date => snapshot.created_at)
+                                  :event_date => Time.at(snapshot.created_at))
           end
           flash[:notice] = message('project_history.version_created', :params => params[:version_name])
         end

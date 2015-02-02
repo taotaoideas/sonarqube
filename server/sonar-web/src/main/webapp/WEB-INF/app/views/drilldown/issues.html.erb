@@ -5,7 +5,7 @@
         resourceQualifier: '<%= @resource.qualifier -%>',
         rule: <% if @rule %>'<%= @rule.key -%>'<% else %>null<% end %>,
         severity: <% if @severity %>'<%= @severity -%>'<% else %>null<% end %>,
-        periodDate: <% if @period %>'<%= @snapshot.period_datetime(@period) -%>'<% else %>null<% end %>
+        periodDate: <% if @period %>'<%= Time.at(@snapshot.period_datetime(@period)/1000) -%>'<% else %>null<% end %>
       },
       url = baseUrl + '/component_issues/index?id=<%= @resource.key -%>#resolved=false';
   if (config.rule) {

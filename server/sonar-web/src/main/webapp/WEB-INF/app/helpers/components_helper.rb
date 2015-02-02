@@ -45,8 +45,8 @@ module ComponentsHelper
         end
       end
     elsif column.build_time_column?
-      measure_param = snapshot.created_at.tv_sec
-      content = human_short_date( snapshot.created_at )
+      measure_param = snapshot.created_at / 1000
+      content = human_short_date( Time.at(snapshot.created_at/1000) )
 
     elsif column.metric_column?
       measure = item_by_metric_id(measures_by_snapshot[snapshot], column.id )

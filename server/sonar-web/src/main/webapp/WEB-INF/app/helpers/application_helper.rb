@@ -203,7 +203,7 @@ module ApplicationHelper
     if issues_metrics.include? metric_key
       url = url_for({:controller => 'component_issues', :action => 'index', :id => options[:resource]||@resource.id}) + '#'
       if options[:period] && @snapshot
-        snapshot_datetime = @snapshot.period_datetime(options[:period])
+        snapshot_datetime = Time.at(@snapshot.period_datetime(options[:period])/1000)
         if snapshot_datetime
           date = snapshot_datetime.to_date
           url += "createdAfter=#{date}|"

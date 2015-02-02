@@ -260,8 +260,8 @@ class MeasuresController < ApplicationController
       component_hash[:longName] = component.long_name if fields.include?('longName') && component.long_name
       component_hash[:qualifier] = component.qualifier if component.qualifier
       component_hash[:favorite] = logged_in? && current_user.favourite?(component.id) if fields.include?('favourite')
-      component_hash[:date] = Api::Utils.format_datetime(row.snapshot.created_at) if fields.include?('date') && row.snapshot.created_at
-      component_hash[:fdate] = human_short_date(row.snapshot.created_at) if fields.include?('date') && row.snapshot.created_at
+      component_hash[:date] = Api::Utils.format_datetime(Time.at(row.snapshot.created_at)) if fields.include?('date') && row.snapshot.created_at
+      component_hash[:fdate] = human_short_date(Time.at(row.snapshot.created_at/1000)) if fields.include?('date') && row.snapshot.created_at
 
       if display_links && row.links
         links_hash = {}
