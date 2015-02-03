@@ -63,6 +63,6 @@ class Event < ActiveRecord::Base
   # TODO: Remove this code when everything has been checked on the Event handling, both on the UI and the WS API
   #
   def populate_snapshot
-    self.snapshot=Snapshot.snapshot_by_date(resource_id, event_date) unless self.snapshot
+    self.snapshot=Snapshot.snapshot_by_date(resource_id, event_date.to_i*1000) unless self.snapshot
   end
 end
