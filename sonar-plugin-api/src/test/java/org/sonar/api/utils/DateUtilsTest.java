@@ -113,6 +113,13 @@ public class DateUtilsTest {
     Assertions.assertThat(DateUtils.longToDate(null)).isNull();
   }
 
+  @Test
+  public void date_to_long() throws Exception {
+    Date date = new Date();
+    Assertions.assertThat(DateUtils.dateToTime(date)).isEqualTo(date.getTime());
+    Assertions.assertThat(DateUtils.dateToTime(null)).isEqualTo(null);
+  }
+
   /**
    * Cordially copied from XStream unit test
    * See http://koders.com/java/fid8A231D75F2C6E6909FB26BCA11C12D08AD05FB50.aspx?s=ThreadSafeDateFormatTest

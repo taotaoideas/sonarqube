@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 
+import static org.sonar.api.utils.DateUtils.dateToTime;
+
 /**
  * @since 3.6
  */
@@ -67,12 +69,12 @@ public class IssueDao implements BatchComponent, ServerComponent {
 
   // TODO replace by aggregation in IssueIndex
   public List<RuleDto> findRulesByComponent(String componentKey, @Nullable Date createdAtOrAfter, DbSession session) {
-    return mapper(session).findRulesByComponent(componentKey, createdAtOrAfter);
+    return mapper(session).findRulesByComponent(componentKey, dateToTime(createdAtOrAfter));
   }
 
   // TODO replace by aggregation in IssueIndex
   public List<String> findSeveritiesByComponent(String componentKey, @Nullable Date createdAtOrAfter, DbSession session) {
-    return mapper(session).findSeveritiesByComponent(componentKey, createdAtOrAfter);
+    return mapper(session).findSeveritiesByComponent(componentKey, dateToTime(createdAtOrAfter));
   }
 
   protected IssueMapper mapper(DbSession session) {

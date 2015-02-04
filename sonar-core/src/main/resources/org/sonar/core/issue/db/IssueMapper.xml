@@ -23,9 +23,9 @@
     i.author_login as authorLogin,
     i.tags as tagsString,
     i.issue_attributes as issueAttributes,
-    i.issue_creation_date as issueCreationDate,
-    i.issue_update_date as issueUpdateDate,
-    i.issue_close_date as issueCloseDate,
+    i.issue_creation_date as issueCreationTime,
+    i.issue_update_date as issueUpdateTime,
+    i.issue_close_date as issueCloseTime,
     i.created_at as createdAt,
     i.updated_at as updatedAt,
     r.plugin_rule_key as ruleKey,
@@ -53,13 +53,13 @@
           i.assignee as assignee
         </when>
         <when test="'CREATION_DATE'.equals(query.sort())">
-          i.issue_creation_date as issueCreationDate
+          i.issue_creation_date as issueCreationTime
         </when>
         <when test="'UPDATE_DATE'.equals(query.sort())">
-          i.issue_update_date as issueUpdateDate
+          i.issue_update_date as issueUpdateTime
         </when>
         <when test="'CLOSE_DATE'.equals(query.sort())">
-          i.issue_close_date as issueCloseDate
+          i.issue_close_date as issueCloseTime
         </when>
       </choose>
     </if>
@@ -77,7 +77,7 @@
     #{tagsString,jdbcType=VARCHAR}, #{resolution,jdbcType=VARCHAR}, #{checksum,jdbcType=VARCHAR},
     #{reporter,jdbcType=VARCHAR}, #{assignee,jdbcType=VARCHAR}, #{authorLogin,jdbcType=VARCHAR},
     #{issueAttributes,jdbcType=VARCHAR},
-    #{issueCreationDate,jdbcType=TIMESTAMP},#{issueUpdateDate,jdbcType=TIMESTAMP}, #{issueCloseDate,jdbcType=TIMESTAMP},
+    #{issueCreationTime,jdbcType=BIGINT},#{issueUpdateTime,jdbcType=BIGINT}, #{issueCloseTime,jdbcType=BIGINT},
     #{createdAt,jdbcType=BIGINT}, #{updatedAt,jdbcType=BIGINT},
     #{componentUuid,jdbcType=VARCHAR}, #{projectUuid,jdbcType=VARCHAR})
   </insert>
@@ -103,9 +103,9 @@
     tags=#{tagsString},
     project_uuid=#{projectUuid},
     issue_attributes=#{issueAttributes},
-    issue_creation_date=#{issueCreationDate},
-    issue_update_date=#{issueUpdateDate},
-    issue_close_date=#{issueCloseDate},
+    issue_creation_date=#{issueCreationTime},
+    issue_update_date=#{issueUpdateTime},
+    issue_close_date=#{issueCloseTime},
     updated_at=#{updatedAt}
     where kee = #{kee}
   </update>
@@ -131,9 +131,9 @@
     tags=#{tagsString},
     project_uuid=#{projectUuid},
     issue_attributes=#{issueAttributes},
-    issue_creation_date=#{issueCreationDate},
-    issue_update_date=#{issueUpdateDate},
-    issue_close_date=#{issueCloseDate},
+    issue_creation_date=#{issueCreationTime},
+    issue_update_date=#{issueUpdateTime},
+    issue_close_date=#{issueCloseTime},
     updated_at=#{updatedAt}
     where kee = #{kee} and updated_at &lt;= #{selectedAt}
   </update>
@@ -170,9 +170,9 @@
     i.author_login as authorLogin,
     i.tags as tagsString,
     i.issue_attributes as issueAttributes,
-    i.issue_creation_date as issueCreationDate,
-    i.issue_update_date as issueUpdateDate,
-    i.issue_close_date as issueCloseDate,
+    i.issue_creation_date as issueCreationTime,
+    i.issue_update_date as issueUpdateTime,
+    i.issue_close_date as issueCloseTime,
     i.created_at as createdAt,
     i.updated_at as updatedAt,
     r.plugin_rule_key as ruleKey,
@@ -198,7 +198,7 @@
     i.resolution as resolution,
     i.checksum as checksum,
     i.assignee as assigneeLogin,
-    i.issue_creation_date as creationDate,
+    i.issue_creation_date as creationTime,
     r.plugin_rule_key as ruleKey,
     r.plugin_name as ruleRepo,
     component.kee as componentKey
@@ -220,7 +220,7 @@
     i.resolution as resolution,
     i.checksum as checksum,
     i.assignee as assigneeLogin,
-    i.issue_creation_date as creationDate,
+    i.issue_creation_date as creationTime,
     r.plugin_rule_key as ruleKey,
     r.plugin_name as ruleRepo,
     component.kee as componentKey

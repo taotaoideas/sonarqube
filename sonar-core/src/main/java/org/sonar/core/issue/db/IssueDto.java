@@ -37,9 +37,13 @@ import org.sonar.core.rule.RuleDto;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+
+import static org.sonar.api.utils.DateUtils.dateToTime;
+import static org.sonar.api.utils.DateUtils.timeToDate;
 
 /**
  * @since 3.6
@@ -72,10 +76,10 @@ public final class IssueDto implements Serializable {
   private long createdAt;
   private long updatedAt;
 
-  // functional dates
-  private Date issueCreationDate;
-  private Date issueUpdateDate;
-  private Date issueCloseDate;
+  // functional dates stored as Long
+  private Long issueCreationDate;
+  private Long issueUpdateDate;
+  private Long issueCloseDate;
 
   /**
    * Temporary date used only during scan
@@ -288,54 +292,81 @@ public final class IssueDto implements Serializable {
     return this;
   }
 
+  /**
+   * Technical date
+   */
   public long getCreatedAt() {
     return createdAt;
   }
 
-  /**
-   * Technical date
-   */
   public IssueDto setCreatedAt(long createdAt) {
     this.createdAt = createdAt;
     return this;
   }
 
+  /**
+   * Technical date
+   */
   public long getUpdatedAt() {
     return updatedAt;
   }
 
-  /**
-   * Technical date
-   */
   public IssueDto setUpdatedAt(long updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
 
-  public Date getIssueCreationDate() {
+  public Long getIssueCreationTime() {
     return issueCreationDate;
   }
 
+  public IssueDto setIssueCreationTime(Long time) {
+    this.issueCreationDate = time;
+    return this;
+  }
+
+  public Date getIssueCreationDate() {
+    return timeToDate(issueCreationDate);
+  }
+
   public IssueDto setIssueCreationDate(@Nullable Date d) {
-    this.issueCreationDate = d;
+    this.issueCreationDate = dateToTime(d);
+    return this;
+  }
+
+  public Long getIssueUpdateTime() {
+    return issueUpdateDate;
+  }
+
+  public IssueDto setIssueUpdateTime(Long time) {
+    this.issueUpdateDate = time;
     return this;
   }
 
   public Date getIssueUpdateDate() {
-    return issueUpdateDate;
+    return timeToDate(issueUpdateDate);
   }
 
   public IssueDto setIssueUpdateDate(@Nullable Date d) {
-    this.issueUpdateDate = d;
+    this.issueUpdateDate = dateToTime(d);
+    return this;
+  }
+
+  public Long getIssueCloseTime() {
+    return issueCloseDate;
+  }
+
+  public IssueDto setIssueCloseTime(Long time) {
+    this.issueCloseDate = time;
     return this;
   }
 
   public Date getIssueCloseDate() {
-    return issueCloseDate;
+    return timeToDate(issueCloseDate);
   }
 
   public IssueDto setIssueCloseDate(@Nullable Date d) {
-    this.issueCloseDate = d;
+    this.issueCloseDate = dateToTime(d);
     return this;
   }
 
@@ -564,7 +595,7 @@ public final class IssueDto implements Serializable {
       .setIssueUpdateDate(issue.updateDate())
       .setSelectedAt(issue.selectedAt())
 
-        // technical dates
+      // technical dates
       .setCreatedAt(now)
       .setUpdatedAt(now);
   }
@@ -609,7 +640,7 @@ public final class IssueDto implements Serializable {
       .setIssueUpdateDate(issue.updateDate())
       .setSelectedAt(issue.selectedAt())
 
-        // technical date
+      // technical date
       .setUpdatedAt(now);
   }
 
@@ -639,9 +670,9 @@ public final class IssueDto implements Serializable {
     issue.setActionPlanKey(actionPlanKey);
     issue.setAuthorLogin(authorLogin);
     issue.setNew(false);
-    issue.setCreationDate(issueCreationDate);
-    issue.setCloseDate(issueCloseDate);
-    issue.setUpdateDate(issueUpdateDate);
+    issue.setCreationDate(timeToDate(issueCreationDate));
+    issue.setCloseDate(timeToDate(issueCloseDate));
+    issue.setUpdateDate(timeToDate(issueUpdateDate));
     issue.setSelectedAt(selectedAt);
     return issue;
   }

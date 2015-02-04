@@ -31,12 +31,14 @@ import org.sonar.server.db.migrations.SqlUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
+import static org.sonar.api.utils.DateUtils.timeToDate;
+import static org.sonar.server.db.migrations.SqlUtil.getLong;
 
 /**
  * Scrolls over table ISSUES and reads documents to populate
@@ -124,12 +126,12 @@ class IssueResultSetIterator extends ResultSetIterator<IssueDoc> {
     doc.setResolution(rs.getString(10));
     doc.setSeverity(rs.getString(11));
     doc.setStatus(rs.getString(12));
-    doc.setDebt(SqlUtil.getLong(rs, 13));
+    doc.setDebt(getLong(rs, 13));
     doc.setReporter(rs.getString(14));
     doc.setAuthorLogin(rs.getString(15));
-    doc.setFuncCloseDate(SqlUtil.getDate(rs, 16));
-    doc.setFuncCreationDate(SqlUtil.getDate(rs, 17));
-    doc.setFuncUpdateDate(SqlUtil.getDate(rs, 18));
+    doc.setFuncCloseDate(timeToDate(getLong(rs, 16)));
+    doc.setFuncCreationDate(timeToDate(getLong(rs, 17)));
+    doc.setFuncUpdateDate(timeToDate(getLong(rs, 18)));
     String ruleRepo = rs.getString(19);
     String ruleKey = rs.getString(20);
     doc.setRuleKey(RuleKey.of(ruleRepo, ruleKey).toString());
