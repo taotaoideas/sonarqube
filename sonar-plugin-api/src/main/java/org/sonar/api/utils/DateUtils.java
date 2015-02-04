@@ -19,6 +19,7 @@
  */
 package org.sonar.api.utils;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
 import java.io.NotSerializableException;
@@ -60,8 +61,14 @@ public final class DateUtils {
     return date == null ? "" : THREAD_SAFE_DATETIME_FORMAT.format(date);
   }
 
+  @CheckForNull
   public static Date timeToDate(@Nullable Long time) {
     return time == null ? null : new Date(time);
+  }
+
+  @CheckForNull
+  public static Long dateToTime(@Nullable Date date) {
+    return date == null ? null : date.getTime();
   }
 
   /**

@@ -22,6 +22,9 @@ package org.sonar.core.issue.db;
 
 import java.util.Date;
 
+import static org.sonar.api.utils.DateUtils.dateToTime;
+import static org.sonar.api.utils.DateUtils.timeToDate;
+
 public class BatchIssueDto {
 
   private String kee;
@@ -36,7 +39,7 @@ public class BatchIssueDto {
   private String componentKey;
   private String ruleKey;
   private String ruleRepo;
-  private Date creationDate;
+  private Long creationDate;
 
   public String getAssigneeLogin() {
     return assigneeLogin;
@@ -147,11 +150,20 @@ public class BatchIssueDto {
   }
 
   public Date getCreationDate() {
-    return creationDate;
+    return timeToDate(creationDate);
   }
 
   public BatchIssueDto setCreationDate(Date creationDate) {
-    this.creationDate = creationDate;
+    this.creationDate = dateToTime(creationDate);
+    return this;
+  }
+
+  public Long getCreationTime() {
+    return creationDate;
+  }
+
+  public BatchIssueDto setCreationTime(Long time) {
+    this.creationDate = time;
     return this;
   }
 }
