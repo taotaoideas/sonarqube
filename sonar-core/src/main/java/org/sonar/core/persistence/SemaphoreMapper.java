@@ -27,7 +27,7 @@ public interface SemaphoreMapper {
 
   int initialize(SemaphoreDto semaphore);
 
-  int acquire(@Param("name") String name, @Param("updatedBefore") Date updatedBefore);
+  int acquire(@Param("name") String name, @Param("updatedBefore") Long updatedBefore);
 
   Date now();
 
