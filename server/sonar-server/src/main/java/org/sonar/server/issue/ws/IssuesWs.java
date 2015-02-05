@@ -42,18 +42,10 @@ public class IssuesWs implements WebService {
   public static final String DO_ACTION_ACTION = "do_action";
   public static final String BULK_CHANGE_ACTION = "bulk_change";
 
-  private final IssueShowAction showAction;
-  private final SearchAction esSearchAction;
-  private final TagsAction tagsAction;
-  private final SetTagsAction setTagsAction;
-  private final ComponentTagsAction componentTagsAction;
+  private final BaseIssuesWsAction[] actions;
 
-  public IssuesWs(IssueShowAction showAction, SearchAction searchAction, TagsAction tagsAction, SetTagsAction setTagsAction, ComponentTagsAction componentTagsAction) {
-    this.showAction = showAction;
-    this.esSearchAction = searchAction;
-    this.tagsAction = tagsAction;
-    this.setTagsAction = setTagsAction;
-    this.componentTagsAction = componentTagsAction;
+  public IssuesWs(BaseIssuesWsAction... actions) {
+    this.actions = actions;
   }
 
   @Override
@@ -61,13 +53,14 @@ public class IssuesWs implements WebService {
     NewController controller = context.createController(API_ENDPOINT);
     controller.setDescription("Coding rule issues");
     controller.setSince("3.6");
+    for (BaseIssuesWsAction action : actions) {
+      action.define(controller);
+    }
+    defineRailsActions(controller);
+    controller.done();
+  }
 
-    showAction.define(controller);
-    esSearchAction.define(controller);
-    tagsAction.define(controller);
-    setTagsAction.define(controller);
-    componentTagsAction.define(controller);
-
+  private void defineRailsActions(NewController controller) {
     defineChangelogAction(controller);
     defineAssignAction(controller);
     defineAddCommentAction(controller);
@@ -80,8 +73,6 @@ public class IssuesWs implements WebService {
     defineCreateAction(controller);
     defineDoActionAction(controller);
     defineBulkChangeAction(controller);
-
-    controller.done();
   }
 
   private void defineChangelogAction(NewController controller) {

@@ -17,33 +17,33 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.server.issue.ws;
+package org.sonar.server.es;
 
 import org.junit.Test;
-import org.sonar.api.server.ws.WebService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
-public class IssuesWsTest {
+public class FacetBucketTest {
 
   @Test
-  public void define_actions() throws Exception {
-    BaseIssuesWsAction action1 = mock(BaseIssuesWsAction.class);
-    BaseIssuesWsAction action2 = mock(BaseIssuesWsAction.class);
-    IssuesWs ws = new IssuesWs(action1, action2);
-    WebService.Context context = new WebService.Context();
-    ws.define(context);
+  public void test() throws Exception {
+    FacetBucket bucket1 = new FacetBucket("foo", 12);
+    FacetBucket bucket1bis = new FacetBucket("foo", 12);
+    FacetBucket bucket2 = new FacetBucket("foo", 25);
+    FacetBucket bucket3 = new FacetBucket("bar", 12);
 
-    WebService.Controller controller = context.controller("api/issues");
-    assertThat(controller).isNotNull();
-    assertThat(controller.description()).isNotEmpty();
-    assertThat(controller.since()).isEqualTo("3.6");
-    assertThat(controller.actions()).isNotEmpty();
-    verify(action1).define(any(WebService.NewController.class));
-    verify(action2).define(any(WebService.NewController.class));
+    assertThat(bucket1.getKey()).isEqualTo("foo");
+    assertThat(bucket1.getValue()).isEqualTo(12);
+    assertThat(bucket1.toString()).isEqualTo("{foo=12}");
+
+    assertThat(bucket1.equals(bucket1)).isTrue();
+    assertThat(bucket1.equals(bucket1bis)).isTrue();
+    assertThat(bucket1.equals(bucket2)).isFalse();
+    assertThat(bucket1.equals(bucket3)).isFalse();
+    assertThat(bucket1.equals("foo")).isFalse();
+    assertThat(bucket1.equals(null)).isFalse();
+
+    assertThat(bucket1.hashCode()).isEqualTo(bucket1.hashCode());
+    assertThat(bucket1.hashCode()).isEqualTo(bucket1bis.hashCode());
   }
-
 }

@@ -17,31 +17,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.core.issue.db;
+package org.sonar.server.es;
 
-import org.apache.ibatis.annotations.Param;
-import org.sonar.core.rule.RuleDto;
+import com.google.common.base.Function;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.sonar.server.search.BaseDoc;
 
-import javax.annotation.Nullable;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public interface IssueMapper {
+public class EsUtils {
 
-  IssueDto selectByKey(String key);
+  private EsUtils() {
+    // only static methods
+  }
 
-  List<IssueDto> selectByKeys(List<String> keys);
-
-  List<IssueDto> selectByActionPlan(String actionPlan);
-
-  List<RuleDto> findRulesByComponent(@Param("componentKey") String componentKey, @Nullable @Param("createdAt") Date createdAtOrAfter);
-
-  List<String> findSeveritiesByComponent(@Param("componentKey") String componentKey, @Nullable @Param("createdAt") Date createdAtOrAfter);
-
-  void insert(IssueDto issue);
-
-  int update(IssueDto issue);
-
-  int updateIfBeforeSelectedDate(IssueDto issue);
+  public static <D extends BaseDoc> List<D> convertToDocs(SearchHits hits, Function<Map<String,Object>, D> converter) {
+    List<D> docs = new ArrayList<>();
+    for (SearchHit hit : hits.getHits()) {
+      docs.add(converter.apply(hit.getSource()));
+    }
+    return docs;
+  }
 
 }

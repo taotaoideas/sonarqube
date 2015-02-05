@@ -50,9 +50,7 @@ public class ComponentTagsActionTest {
   public void setUp() {
     componentTagsAction = new ComponentTagsAction(service);
     tester = new WsTester(
-      new IssuesWs(new IssueShowAction(null, null, null, null, null, null, null, null, null, null, null),
-        new SearchAction(null, null, null, null, null, null, null, null, null, null,null),
-        new TagsAction(null), new SetTagsAction(null), componentTagsAction));
+      new IssuesWs(componentTagsAction));
   }
 
   @Test

@@ -17,31 +17,50 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.core.issue.db;
+package org.sonar.server.es;
 
-import org.apache.ibatis.annotations.Param;
-import org.sonar.core.rule.RuleDto;
+public class FacetBucket {
 
-import javax.annotation.Nullable;
-import java.util.Date;
-import java.util.List;
+  private final String key;
+  private final long value;
 
-public interface IssueMapper {
+  public FacetBucket(String key, long value) {
+    this.key = key;
+    this.value = value;
+  }
 
-  IssueDto selectByKey(String key);
+  public String getKey() {
+    return key;
+  }
 
-  List<IssueDto> selectByKeys(List<String> keys);
+  public long getValue() {
+    return value;
+  }
 
-  List<IssueDto> selectByActionPlan(String actionPlan);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    FacetBucket that = (FacetBucket) o;
+    if (value != that.value) {
+      return false;
+    }
+    return key.equals(that.key);
+  }
 
-  List<RuleDto> findRulesByComponent(@Param("componentKey") String componentKey, @Nullable @Param("createdAt") Date createdAtOrAfter);
+  @Override
+  public int hashCode() {
+    int result = key.hashCode();
+    result = 31 * result + (int) (value ^ (value >>> 32));
+    return result;
+  }
 
-  List<String> findSeveritiesByComponent(@Param("componentKey") String componentKey, @Nullable @Param("createdAt") Date createdAtOrAfter);
-
-  void insert(IssueDto issue);
-
-  int update(IssueDto issue);
-
-  int updateIfBeforeSelectedDate(IssueDto issue);
-
+  @Override
+  public String toString() {
+    return String.format("{%s=%d}", getKey(), getValue());
+  }
 }

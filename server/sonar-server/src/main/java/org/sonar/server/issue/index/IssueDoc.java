@@ -34,6 +34,10 @@ import java.util.*;
 
 public class IssueDoc extends BaseDoc implements Issue {
 
+  public IssueDoc() {
+    super(new HashMap<String, Object>());
+  }
+
   public IssueDoc(Map<String, Object> fields) {
     super(fields);
   }
