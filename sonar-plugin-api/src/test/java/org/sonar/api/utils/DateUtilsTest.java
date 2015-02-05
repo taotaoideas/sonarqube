@@ -107,7 +107,7 @@ public class DateUtilsTest {
   }
 
   @Test
-  public void time_to_date() throws Exception {
+  public void long_to_date() throws Exception {
     Date date = new Date();
     Assertions.assertThat(DateUtils.longToDate(date.getTime())).isEqualTo(date);
     Assertions.assertThat(DateUtils.longToDate(null)).isNull();
@@ -116,8 +116,8 @@ public class DateUtilsTest {
   @Test
   public void date_to_long() throws Exception {
     Date date = new Date();
-    Assertions.assertThat(DateUtils.dateToTime(date)).isEqualTo(date.getTime());
-    Assertions.assertThat(DateUtils.dateToTime(null)).isEqualTo(null);
+    Assertions.assertThat(DateUtils.dateToLong(date)).isEqualTo(date.getTime());
+    Assertions.assertThat(DateUtils.dateToLong(null)).isEqualTo(null);
   }
 
   /**

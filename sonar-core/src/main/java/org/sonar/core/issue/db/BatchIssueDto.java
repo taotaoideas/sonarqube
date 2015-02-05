@@ -22,8 +22,8 @@ package org.sonar.core.issue.db;
 
 import java.util.Date;
 
-import static org.sonar.api.utils.DateUtils.dateToTime;
-import static org.sonar.api.utils.DateUtils.timeToDate;
+import static org.sonar.api.utils.DateUtils.dateToLong;
+import static org.sonar.api.utils.DateUtils.longToDate;
 
 public class BatchIssueDto {
 
@@ -150,11 +150,11 @@ public class BatchIssueDto {
   }
 
   public Date getCreationDate() {
-    return timeToDate(creationDate);
+    return longToDate(creationDate);
   }
 
   public BatchIssueDto setCreationDate(Date creationDate) {
-    this.creationDate = dateToTime(creationDate);
+    this.creationDate = dateToLong(creationDate);
     return this;
   }
 

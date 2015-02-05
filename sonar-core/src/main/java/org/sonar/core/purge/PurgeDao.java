@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.sonar.api.utils.DateUtils.dateToTime;
+import static org.sonar.api.utils.DateUtils.dateToLong;
 
 /**
  * @since 2.14
@@ -84,8 +84,8 @@ public class PurgeDao {
 
   private void deleteOldClosedIssues(PurgeConfiguration conf, PurgeMapper mapper) {
     Date toDate = conf.maxLiveDateOfClosedIssues();
-    mapper.deleteOldClosedIssueChanges(conf.rootProjectIdUuid().getUuid(), dateToTime(toDate));
-    mapper.deleteOldClosedIssues(conf.rootProjectIdUuid().getUuid(), dateToTime(toDate));
+    mapper.deleteOldClosedIssueChanges(conf.rootProjectIdUuid().getUuid(), dateToLong(toDate));
+    mapper.deleteOldClosedIssues(conf.rootProjectIdUuid().getUuid(), dateToLong(toDate));
   }
 
   private void deleteAbortedBuilds(ResourceDto project, PurgeCommands commands) {
