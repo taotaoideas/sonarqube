@@ -24,7 +24,7 @@
 class AddIssuesLongDates < ActiveRecord::Migration
   def self.up
     add_column 'issues', :issue_creation_date_ms, :big_integer, :null => true
-    add_column 'snapshots', :issue_update_date_ms, :big_integer, :null => true
-    add_column 'snapshots', :issue_close_date_ms, :big_integer, :null => true
+    add_column 'issues', :issue_update_date_ms, :big_integer, :null => true
+    add_column 'issues', :issue_close_date_ms, :big_integer, :null => true
   end
 end
