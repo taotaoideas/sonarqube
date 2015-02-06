@@ -78,7 +78,7 @@ public class SemaphoreDao {
     checkArgument(semaphore != null, "Semaphore must not be null");
 
     try (SqlSession session = mybatis.openSession(false)) {
-      mapper(session).update(semaphore.getName());
+      mapper(session).update(semaphore.getName(), system.now());
       session.commit();
     }
   }
@@ -95,7 +95,7 @@ public class SemaphoreDao {
     long now = system.now();
     long updatedBefore = now - maxAgeInSeconds * 1000;
 
-    boolean ok = mapper(session).acquire(name, updatedBefore) == 1;
+    boolean ok = mapper(session).acquire(name, updatedBefore, system.now()) == 1;
     session.commit();
     return ok;
   }
