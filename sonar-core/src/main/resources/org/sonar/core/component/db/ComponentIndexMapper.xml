@@ -9,6 +9,7 @@
       AND copy.module_uuid_path LIKE #{viewOrSubViewUuid}
       AND r.kee LIKE #{query}
     </where>
+    ORDER BY r.name_size
   </select>
 
 </mapper>
