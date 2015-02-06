@@ -27,6 +27,7 @@ import org.sonar.core.persistence.DaoComponent;
 import org.sonar.core.persistence.MyBatis;
 
 import javax.annotation.Nullable;
+
 import java.util.*;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -62,6 +63,23 @@ public class AuthorizationDao implements ServerComponent, DaoComponent {
     } else {
       sql = "keepAuthorizedComponentKeysForUser";
       params = ImmutableMap.of(USER_ID_PARAM, userId, "role", role, "componentKeys", componentKeys);
+    }
+
+    return Sets.newHashSet(session.<String>selectList(sql, params));
+  }
+
+  public Set<String> keepAuthorizedComponentIds(SqlSession session, Set<Long> componentIds, @Nullable Integer userId, String role) {
+    if (componentIds.isEmpty()) {
+      return Collections.emptySet();
+    }
+    String sql;
+    Map<String, Object> params;
+    if (userId == null) {
+      sql = "keepAuthorizedComponentIdsForAnonymous";
+      params = ImmutableMap.of("role", role, "componentIds", componentIds);
+    } else {
+      sql = "keepAuthorizedComponentIdsForUser";
+      params = ImmutableMap.of(USER_ID_PARAM, userId, "role", role, "componentIds", componentIds);
     }
 
     return Sets.newHashSet(session.<String>selectList(sql, params));
