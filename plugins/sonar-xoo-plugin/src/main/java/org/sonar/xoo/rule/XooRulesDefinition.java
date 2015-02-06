@@ -64,6 +64,16 @@ public class XooRulesDefinition implements RulesDefinition {
         + "== Example with property set to ``false``\n``xoo\n   <- One issue here\n<- And one here\n``\n\n"
         + "== Example with property set to ``true``\n``xoo\n   <- No issue here\n<- But one here\n``\n");
 
+    NewRule templateRule1 = repository.createRule("template1")
+      .setName("Template rule")
+      .setMarkdownDescription("Template rule")
+      .setTemplate(true);
+
+    templateRule1.createParam("size")
+      .setDefaultValue("5")
+      .setType(RuleParamType.INTEGER)
+      .setDescription(" TODO ");
+
     // don't forget to call done() to finalize the definition
     repository.done();
   }

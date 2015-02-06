@@ -154,4 +154,5 @@ public class ComponentDao extends BaseDao<ComponentMapper, ComponentDto, String>
   public List<String> selectProjectsFromView(DbSession session, String viewUuid, String projectViewUuid) {
     return mapper(session).selectProjectsFromView("%." + viewUuid + ".%", projectViewUuid);
   }
+
 }

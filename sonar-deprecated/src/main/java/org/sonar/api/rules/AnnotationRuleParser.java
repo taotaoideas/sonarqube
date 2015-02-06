@@ -67,7 +67,7 @@ public final class AnnotationRuleParser implements ServerComponent {
     String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
     String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
     String description = StringUtils.defaultIfEmpty(ruleAnnotation.description(), null);
-    Rule rule = Rule.create(repositoryKey, ruleKey, ruleName);
+    Rule rule = Rule.create(repositoryKey, ruleKey, ruleName); // Internal key is set from key !
     rule.setDescription(description);
     rule.setSeverity(RulePriority.fromCheckPriority(ruleAnnotation.priority()));
     rule.setCardinality(ruleAnnotation.cardinality());
@@ -101,15 +101,15 @@ public final class AnnotationRuleParser implements ServerComponent {
   }
 
   private static final Function<Class<?>, PropertyType> TYPE_FOR_CLASS = Functions.forMap(
-      ImmutableMap.<Class<?>, PropertyType> builder()
-          .put(Integer.class, PropertyType.INTEGER)
-          .put(int.class, PropertyType.INTEGER)
-          .put(Float.class, PropertyType.FLOAT)
-          .put(float.class, PropertyType.FLOAT)
-          .put(Boolean.class, PropertyType.BOOLEAN)
-          .put(boolean.class, PropertyType.BOOLEAN)
-          .build(),
-      PropertyType.STRING);
+    ImmutableMap.<Class<?>, PropertyType>builder()
+      .put(Integer.class, PropertyType.INTEGER)
+      .put(int.class, PropertyType.INTEGER)
+      .put(Float.class, PropertyType.FLOAT)
+      .put(float.class, PropertyType.FLOAT)
+      .put(Boolean.class, PropertyType.BOOLEAN)
+      .put(boolean.class, PropertyType.BOOLEAN)
+      .build(),
+    PropertyType.STRING);
 
   @VisibleForTesting
   static PropertyType guessType(Class<?> type) {
