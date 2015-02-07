@@ -349,6 +349,11 @@ module.exports = (grunt) ->
         src: ['<%= grunt.option("file") %>']
 
 
+    karma:
+      test:
+        configFile: 'karma.conf.js'
+
+
     uglify:
       build:
         files: [
@@ -409,6 +414,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-express-server'
   grunt.loadNpmTasks 'grunt-casper'
+  grunt.loadNpmTasks 'grunt-karma'
 
 
   # Define tasks
@@ -423,7 +429,7 @@ module.exports = (grunt) ->
       ['build']
 
   grunt.registerTask 'test',
-      ['dev', 'express:test', 'casper:test']
+      ['dev', 'karma:test']
 
   grunt.registerTask 'single',
       ['dev', 'express:test', 'casper:single']

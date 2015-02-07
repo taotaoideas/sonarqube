@@ -56,7 +56,7 @@
   "couch": false,
   "devel": true,
   "dojo": false,
-  "jasmine": false,
+  "jasmine": true,
   "jquery": true,
   "mocha": false,
   "mootools": false,
