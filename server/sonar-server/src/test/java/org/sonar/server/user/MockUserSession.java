@@ -20,6 +20,7 @@
 package org.sonar.server.user;
 
 import com.google.common.collect.HashMultimap;
+import org.sonar.core.component.ComponentDto;
 import org.sonar.core.resource.ResourceDao;
 import org.sonar.core.user.AuthorizationDao;
 
@@ -115,6 +116,12 @@ public class MockUserSession extends UserSession {
   public MockUserSession addComponentUuidPermission(String projectPermission, String projectUuid, String componentUuid) {
     this.projectUuidByComponentUuid.put(componentUuid, projectUuid);
     addProjectUuidPermissions(projectPermission, projectUuid);
+    return this;
+  }
+
+  public MockUserSession addComponentPermission(String projectPermission, ComponentDto component) {
+    this.projectUuidByComponentUuid.put(component.uuid(), component.projectUuid());
+    addProjectUuidPermissions(projectPermission, component.projectUuid());
     return this;
   }
 

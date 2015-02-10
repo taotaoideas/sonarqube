@@ -25,6 +25,7 @@ import com.google.common.collect.HashMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.security.DefaultGroups;
+import org.sonar.core.component.ComponentDto;
 import org.sonar.core.permission.GlobalPermissions;
 import org.sonar.core.resource.ResourceDao;
 import org.sonar.core.resource.ResourceDto;
@@ -222,12 +223,22 @@ public class UserSession {
   }
 
   /**
-   * Does the user have the given project permission for a component ?
+   * Ensures that user implies the specified project permission on a component (can be any component : file, dir, module, projects, ...).
+   * If not a {@link org.sonar.server.exceptions.ForbiddenException} is thrown.
+   */
+  public UserSession checkComponentPermission(String projectPermission, ComponentDto component) {
+    if (!hasComponentPermission(projectPermission, component)) {
+      throw new ForbiddenException(INSUFFICIENT_PRIVILEGES_MESSAGE);
+    }
+    return this;
+  }
+
+  /**
+   * Does the user have the given project permission for a component key ?
    */
   public boolean hasComponentPermission(String permission, String componentKey) {
     String projectKey = projectKeyByComponentKey.get(componentKey);
     if (projectKey == null) {
-      // TODO use method using UUID
       ResourceDto project = resourceDao().getRootProjectByComponentKey(componentKey);
       if (project == null) {
         return false;
@@ -257,6 +268,18 @@ public class UserSession {
     boolean hasComponentPermission = hasProjectPermissionByUuid(permission, projectUuid);
     if (hasComponentPermission) {
       projectUuidByComponentUuid.put(componentUuid, projectUuid);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Does the user have the given project permission for a component (can be any component : file, dir, module, projects, ...) ?
+   */
+  public boolean hasComponentPermission(String permission, ComponentDto component) {
+    String projectUuid = component.projectUuid();
+    if (hasProjectPermissionByUuid(permission, projectUuid)) {
+      projectUuidByComponentUuid.put(component.uuid(), projectUuid);
       return true;
     }
     return false;
