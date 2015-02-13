@@ -84,15 +84,15 @@ public class UpdateProjectsModuleUuidPath extends BaseDataChange {
       return needUpdate;
     }
 
-    private static boolean needUpdateForEmptyPath(String moduleUuidPath) {
+    private static boolean needUpdateForEmptyPath(@Nullable String moduleUuidPath) {
       return StringUtils.isEmpty(moduleUuidPath) || SEP.equals(moduleUuidPath);
     }
 
-    private static boolean needUpdateForSeparators(@Nullable String moduleUuidPath) {
-      return moduleUuidPath == null || !(moduleUuidPath.startsWith(SEP) && moduleUuidPath.endsWith(SEP));
+    private static boolean needUpdateForSeparators(String moduleUuidPath) {
+      return !(moduleUuidPath.startsWith(SEP) && moduleUuidPath.endsWith(SEP));
     }
 
-    private static String newModuleUuidPathWithSeparators(@Nullable String oldModuleUuidPath) {
+    private static String newModuleUuidPathWithSeparators(String oldModuleUuidPath) {
       StringBuilder newModuleUuidPath = new StringBuilder(oldModuleUuidPath);
       newModuleUuidPath.insert(0, SEP);
       newModuleUuidPath.append(SEP);
