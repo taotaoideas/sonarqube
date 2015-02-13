@@ -74,6 +74,7 @@ public class IssueResultSetIteratorTest {
     assertThat(issue.key()).isEqualTo("ABC");
     assertThat(issue.assignee()).isEqualTo("guy1");
     assertThat(issue.componentUuid()).isEqualTo("FILE1");
+    assertThat(issue.projectUuid()).isEqualTo("PROJECT1");
     assertThat(issue.moduleUuid()).isEqualTo("PROJECT1");
     assertThat(issue.modulePath()).isEqualTo(".PROJECT1.");
     assertThat(issue.filePath()).isEqualTo("src/main/java/Action.java");
@@ -84,6 +85,7 @@ public class IssueResultSetIteratorTest {
     assertThat(issue.key()).isEqualTo("BCD");
     assertThat(issue.assignee()).isEqualTo("guy1");
     assertThat(issue.componentUuid()).isEqualTo("MODULE1");
+    assertThat(issue.projectUuid()).isEqualTo("PROJECT1");
     assertThat(issue.moduleUuid()).isEqualTo("MODULE1");
     assertThat(issue.modulePath()).isEqualTo(".PROJECT1.MODULE1.");
     assertThat(issue.filePath()).isNull();
