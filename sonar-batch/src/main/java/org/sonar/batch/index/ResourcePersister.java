@@ -19,6 +19,7 @@
  */
 package org.sonar.batch.index;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.database.DatabaseSession;
@@ -48,6 +49,8 @@ import static org.sonar.api.utils.DateUtils.dateToLong;
 
 public class ResourcePersister implements ScanPersister {
 
+  @VisibleForTesting
+  static final String MODULE_UUID_PATH_SEPARATOR = ".";
   private static final String RESOURCE_ID = "resourceId";
   private static final String LAST = "last";
   private static final String VERSION = "version";
@@ -283,7 +286,7 @@ public class ResourcePersister implements ScanPersister {
     if (parentResource == null) {
       // Root module && libraries
       model.setProjectUuid(model.getUuid());
-      model.setModuleUuidPath("." + model.getUuid() + ".");
+      model.setModuleUuidPath(MODULE_UUID_PATH_SEPARATOR + model.getUuid() + MODULE_UUID_PATH_SEPARATOR);
     } else {
       ResourceModel parentModel = session.getSingleResult(ResourceModel.class, "id", parentResource.getId());
       model.setProjectUuid(parentModel.getProjectUuid());
@@ -291,7 +294,7 @@ public class ResourcePersister implements ScanPersister {
         // Sub module
         model.setModuleUuid(parentResource.getUuid());
         String parentModuleUuidPath = parentModel.getModuleUuidPath();
-        model.setModuleUuidPath(parentModuleUuidPath + model.getUuid() + ".");
+        model.setModuleUuidPath(parentModuleUuidPath + model.getUuid() + MODULE_UUID_PATH_SEPARATOR);
       } else if (Scopes.isProject(parentResource)) {
         // Directory
         model.setModuleUuid(parentResource.getUuid());
