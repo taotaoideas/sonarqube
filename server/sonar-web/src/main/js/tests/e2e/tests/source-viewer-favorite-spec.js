@@ -37,6 +37,10 @@ casper.test.begin(testName('Mark as Favorite'), function (test) {
         });
       })
 
+      .then(function () {
+        lib.sendCoverage();
+      })
+
       .run(function () {
         test.done();
       });
@@ -61,6 +65,10 @@ casper.test.begin(testName('Don\'t Show Favorite If Not Logged In'), function (t
         test.assertDoesntExist('.js-favorite');
         test.assertDoesntExist('.icon-favorite');
         test.assertDoesntExist('.icon-not-favorite');
+      })
+
+      .then(function () {
+        lib.sendCoverage();
       })
 
       .run(function () {

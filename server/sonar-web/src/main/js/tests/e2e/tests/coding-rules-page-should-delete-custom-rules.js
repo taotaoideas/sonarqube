@@ -41,6 +41,10 @@ casper.test.begin('coding-rules-page-should-delete-custom-rules', 2, function (t
         });
       })
 
+      .then(function () {
+        lib.sendCoverage();
+      })
+
       .run(function () {
         test.done();
       });

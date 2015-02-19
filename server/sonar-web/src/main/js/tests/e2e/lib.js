@@ -7,6 +7,7 @@ var getPort = function () {
 };
 
 var BASE_URL = 'http://localhost:' + getPort() + '/pages/',
+    BASE_ROOT_URL = 'http://localhost:' + getPort(),
     WINDOW_WIDTH = 1200,
     WINDOW_HEIGHT = 800;
 
@@ -99,6 +100,11 @@ exports.buildUrl = function (urlTail) {
 };
 
 
+exports.buildRootUrl = function (urlTail) {
+  return patchWithTimestamp(BASE_ROOT_URL + urlTail);
+};
+
+
 exports.setDefaultViewport = function () {
   casper.viewport(WINDOW_WIDTH, WINDOW_HEIGHT);
 };
@@ -135,5 +141,19 @@ exports.assertLinkHref = function assertElementCount(selector, href, message) {
       expected: count,
       obtained: elementCount
     }
+  });
+};
+
+
+exports.sendCoverage = function () {
+  return casper.evaluate(function () {
+    console.log(Object.keys(window.__coverage__));
+    jQuery.ajax({
+      type: 'POST',
+      url: '/coverage/client',
+      data: JSON.stringify(window.__coverage__),
+      processData: false,
+      contentType: 'application/json; charset=UTF-8'
+    });
   });
 };

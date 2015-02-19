@@ -58,6 +58,10 @@ casper.test.begin(testName('Base'), function (test) {
         });
       })
 
+      .then(function () {
+        lib.sendCoverage();
+      })
+
       .run(function () {
         test.done();
       });
@@ -94,6 +98,10 @@ casper.test.begin(testName('Issue Box', 'Check Elements'), function (test) {
         test.assertSelectorContains('.issue.selected', '20min');
         test.assertExists('.issue.selected .js-issue-comment');
         test.assertExists('.issue.selected .js-issue-show-changelog');
+      })
+
+      .then(function () {
+        lib.sendCoverage();
       })
 
       .run(function () {
@@ -137,6 +145,10 @@ casper.test.begin(testName('Issue Box', 'Tags'), function (test) {
         test.assertSelectorContains('.issue.selected .js-issue-tags', 'security, design');
       })
 
+      .then(function () {
+        lib.sendCoverage();
+      })
+
       .run(function () {
         test.done();
       });
@@ -168,6 +180,10 @@ casper.test.begin(testName('Issue Box', 'Transitions'), function (test) {
         test.assertExists('.issue-action-option[data-value=unconfirm]');
         test.assertExists('.issue-action-option[data-value=resolve]');
         test.assertExists('.issue-action-option[data-value=falsepositive]');
+      })
+
+      .then(function () {
+        lib.sendCoverage();
       })
 
       .run(function () {
@@ -203,6 +219,10 @@ casper.test.begin(testName('File-Level Issues'), function (test) {
         });
       })
 
+      .then(function () {
+        lib.sendCoverage();
+      })
+
       .run(function () {
         test.done();
       });
@@ -230,6 +250,10 @@ casper.test.begin(testName('Severity Facet'), function (test) {
         casper.waitForSelectorTextChange('#issues-total', function () {
           test.assertElementCount('.issue', 4);
         });
+      })
+
+      .then(function () {
+        lib.sendCoverage();
       })
 
       .run(function () {
@@ -261,6 +285,10 @@ casper.test.begin(testName('Bulk Change'), function (test) {
         casper.waitForSelector('#bulk-change-form', function () {
           test.assertSelectorContains('#bulk-change-form', 'bulk change form');
         });
+      })
+
+      .then(function () {
+        lib.sendCoverage();
       })
 
       .run(function () {
