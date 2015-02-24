@@ -66,7 +66,7 @@ public class CorePropertyDefinitions {
         .description("Login assigned to a new issue if an assignee has not been found.")
         .category(CoreProperties.CATEGORY_GENERAL)
         .subCategory(CoreProperties.SUBCATEGORY_ISSUES)
-        .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE)
+        .onQualifiers(Qualifiers.PROJECT)
         .type(PropertyType.STRING)
         .build(),
 
