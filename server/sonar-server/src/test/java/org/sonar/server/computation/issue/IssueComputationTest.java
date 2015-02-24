@@ -21,6 +21,7 @@ package org.sonar.server.computation.issue;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import org.sonar.batch.protocol.output.BatchReport;
 import org.sonar.core.rule.RuleDto;
 import org.sonar.server.computation.ComputationContext;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -68,6 +70,11 @@ public class IssueComputationTest {
     when(ruleCache.get(RULE_KEY)).thenReturn(rule);
     outputIssues = new IssueCache(temp.newFile(), System2.INSTANCE);
     sut = new IssueComputation(ruleCache, lineCache, scmAccountCache, outputIssues);
+  }
+
+  @After
+  public void after() throws Exception {
+    sut.afterReportProcessing();
   }
 
   @Test
@@ -172,8 +179,21 @@ public class IssueComputationTest {
     verifyZeroInteractions(scmAccountCache);
   }
 
+  @Test
+  public void assign_default_assignee_when_available() throws Exception {
+    inputIssue.setIsNew(true);
+
+    process("wolinski");
+
+    assertThat(Iterators.getOnlyElement(outputIssues.traverse()).assignee()).isEqualTo("wolinski");
+
+  }
+
   private void process() {
-    sut.processComponentIssues(mock(ComputationContext.class, Mockito.RETURNS_DEEP_STUBS), "FILE_A", Arrays.asList(inputIssue.build()));
-    sut.afterReportProcessing();
+    process(null);
+  }
+
+  private void process(@Nullable String defaultAssignee) {
+    sut.processComponentIssues(mock(ComputationContext.class, Mockito.RETURNS_DEEP_STUBS), "FILE_A", Arrays.asList(inputIssue.build()), defaultAssignee);
   }
 }

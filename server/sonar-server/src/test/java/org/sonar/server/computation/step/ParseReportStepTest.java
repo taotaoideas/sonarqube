@@ -24,6 +24,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
+import org.sonar.api.config.Settings;
+import org.sonar.api.utils.TempFolder;
 import org.sonar.api.utils.ZipUtils;
 import org.sonar.api.utils.internal.DefaultTempFolder;
 import org.sonar.batch.protocol.Constants;
@@ -33,6 +36,7 @@ import org.sonar.core.component.ComponentDto;
 import org.sonar.core.computation.db.AnalysisReportDto;
 import org.sonar.core.persistence.DbSession;
 import org.sonar.core.persistence.DbTester;
+import org.sonar.core.user.UserDto;
 import org.sonar.server.computation.ComputationContext;
 import org.sonar.server.computation.db.AnalysisReportDao;
 import org.sonar.server.computation.issue.IssueComputation;
@@ -44,8 +48,9 @@ import java.io.IOException;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 public class ParseReportStepTest {
 
@@ -55,6 +60,8 @@ public class ParseReportStepTest {
   @ClassRule
   public static DbTester dbTester = new DbTester();
 
+  ParseReportStep sut;
+
   @Before
   public void setUp() throws Exception {
     dbTester.truncateTables();
@@ -63,20 +70,51 @@ public class ParseReportStepTest {
   @Test
   public void extract_report_from_db_and_browse_components() throws Exception {
     AnalysisReportDto reportDto = prepareAnalysisReportInDb();
-
-
     IssueComputation issueComputation = mock(IssueComputation.class);
     DbClient dbClient = new DbClient(dbTester.database(), dbTester.myBatis(), new AnalysisReportDao());
-    ParseReportStep step = new ParseReportStep(issueComputation, dbClient, new DefaultTempFolder(temp.newFolder()));
+    sut = new ParseReportStep(issueComputation, dbClient, new DefaultTempFolder(temp.newFolder()));
     ComputationContext context = new ComputationContext(reportDto, mock(ComponentDto.class));
-    step.execute(context);
+    context.setProjectSettings(mock(Settings.class, Mockito.RETURNS_DEEP_STUBS));
+
+    sut.execute(context);
 
     // verify that all components are processed (currently only for issues)
-    verify(issueComputation).processComponentIssues(context, "PROJECT_UUID", Collections.<BatchReport.Issue>emptyList());
-    verify(issueComputation).processComponentIssues(context, "FILE1_UUID", Collections.<BatchReport.Issue>emptyList());
-    verify(issueComputation).processComponentIssues(context, "FILE2_UUID", Collections.<BatchReport.Issue>emptyList());
+    verify(issueComputation).processComponentIssues(context, "PROJECT_UUID", Collections.<BatchReport.Issue>emptyList(), null);
+    verify(issueComputation).processComponentIssues(context, "FILE1_UUID", Collections.<BatchReport.Issue>emptyList(), null);
+    verify(issueComputation).processComponentIssues(context, "FILE2_UUID", Collections.<BatchReport.Issue>emptyList(), null);
     verify(issueComputation).afterReportProcessing();
     assertThat(context.getReportMetadata().getRootComponentRef()).isEqualTo(1);
+  }
+
+  @Test
+  public void default_assignee_is_null_when_no_property() throws Exception {
+    sut = new ParseReportStep(mock(IssueComputation.class), mock(DbClient.class, Mockito.RETURNS_DEEP_STUBS), mock(TempFolder.class));
+
+    String assignee = sut.defaultAssignee(null);
+
+    assertThat(assignee).isNull();
+  }
+
+  @Test
+  public void default_assignee_is_null_when_not_found_in_database() throws Exception {
+    DbClient dbClient = mock(DbClient.class, Mockito.RETURNS_DEEP_STUBS);
+    when(dbClient.userDao().selectActiveUserByLogin(any(DbSession.class), anyString())).thenReturn(null);
+    sut = new ParseReportStep(mock(IssueComputation.class), dbClient, mock(TempFolder.class));
+
+    String assignee = sut.defaultAssignee("defaultAssignee");
+
+    assertThat(assignee).isNull();
+  }
+
+  @Test
+  public void default_assignee_is_returned_when_found_in_database() throws Exception {
+    DbClient dbClient = mock(DbClient.class, Mockito.RETURNS_DEEP_STUBS);
+    when(dbClient.userDao().selectActiveUserByLogin(any(DbSession.class), anyString())).thenReturn(new UserDto());
+    sut = new ParseReportStep(mock(IssueComputation.class), dbClient, mock(TempFolder.class));
+
+    String assignee = sut.defaultAssignee("defaultAssignee");
+
+    assertThat(assignee).isEqualTo("defaultAssignee");
   }
 
   private AnalysisReportDto prepareAnalysisReportInDb() throws IOException {

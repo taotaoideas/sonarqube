@@ -30,6 +30,8 @@ import org.sonar.core.rule.RuleDto;
 import org.sonar.server.computation.ComputationContext;
 import org.sonar.server.util.cache.DiskCache;
 
+import javax.annotation.Nullable;
+
 import java.util.Date;
 
 public class IssueComputation {
@@ -47,13 +49,13 @@ public class IssueComputation {
     this.diskIssuesAppender = issueCache.newAppender();
   }
 
-  public void processComponentIssues(ComputationContext context, String componentUuid, Iterable<BatchReport.Issue> issues) {
+  public void processComponentIssues(ComputationContext context, String componentUuid, Iterable<BatchReport.Issue> issues, @Nullable String defaultAssignee) {
     linesCache.init(componentUuid);
     for (BatchReport.Issue reportIssue : issues) {
       DefaultIssue issue = toDefaultIssue(context, componentUuid, reportIssue);
       if (issue.isNew()) {
         guessAuthor(issue);
-        autoAssign(issue);
+        autoAssign(issue, defaultAssignee);
         copyRuleTags(issue);
       }
       diskIssuesAppender.append(issue);
@@ -110,13 +112,16 @@ public class IssueComputation {
     }
   }
 
-  private void autoAssign(DefaultIssue issue) {
+  private void autoAssign(DefaultIssue issue, @Nullable String defaultAssignee) {
     // issue.assignee() can be not-null if the issue-assign-plugin is
     // still installed and executed during analysis
     if (issue.assignee() == null) {
       String scmAccount = issue.authorLogin();
       if (scmAccount != null) {
         issue.setAssignee(scmAccountCache.getNullable(scmAccount));
+      }
+      if (issue.assignee() == null && defaultAssignee != null) {
+        issue.setAssignee(defaultAssignee);
       }
     }
   }
