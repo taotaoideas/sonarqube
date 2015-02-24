@@ -1,7 +1,6 @@
 [
   {
     "key": "EFGH",
-    "componentKey": "Action.java",
     "ruleKey": "AvoidCycle",
     "ruleRepo": "squid",
     "line": 200,
@@ -11,7 +10,8 @@
     "severity": "BLOCKER",
     "manualSeverity": false,
     "checksum": "123456",
-    "assigneeLogin": "john"
+    "assigneeLogin": "john",
+    "componentKey": "struts-core"
   }
 ]
 
