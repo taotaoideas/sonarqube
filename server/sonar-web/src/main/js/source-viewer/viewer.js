@@ -27,6 +27,7 @@ define([
       'source-viewer/popups/coverage-popup',
       'source-viewer/popups/duplication-popup',
       'source-viewer/popups/line-actions-popup',
+      'workspace/main',
       'templates/source-viewer'
     ],
     function (Source,
@@ -37,7 +38,8 @@ define([
               SCMPopupView,
               CoveragePopupView,
               DuplicationPopupView,
-              LineActionsPopupView) {
+              LineActionsPopupView,
+              Workspace) {
 
       var $ = jQuery,
           HIGHLIGHTED_ROW_CLASS = 'source-line-highlighted';
@@ -345,6 +347,11 @@ define([
         },
 
         highlightUsages: function (e) {
+          if (Workspace == null) {
+            Workspace = require('workspace/main');
+          }
+          Workspace.openComponent(_.pick(this.model.toJSON(), 'uuid', 'name', 'q'));
+
           var highlighted = $(e.currentTarget).is('.highlighted'),
               key = e.currentTarget.className.split(/\s+/)[0];
           this.$('.sym.highlighted').removeClass('highlighted');

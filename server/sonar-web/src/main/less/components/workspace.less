@@ -1,0 +1,67 @@
+@import (reference) "../mixins";
+@import (reference) "../variables";
+
+.workspace-nav {
+  position: fixed;
+  z-index: @workspace-nav-z-index;
+  bottom: 0;
+  right: 0;
+  height: 30px;
+}
+
+.workspace-nav-list {
+  float: right;
+}
+
+.workspace-nav-item {
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 10px;
+  padding: 0 10px;
+  background-color: #404040;
+  color: #fff;
+  font-size: @smallFontSize;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.workspace-viewer {
+  position: fixed;
+  z-index: @workspace-viewer-z-index;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .box-sizing(border-box);
+  background-color: #fff;
+  box-shadow: 0 -6px 12px rgba(0, 0, 0, .175);
+}
+
+.workspace-viewer-header {
+  @topPadding: (30px - @formControlHeight) / 2;
+  height: 30px;
+  padding: @topPadding 10px;
+  .box-sizing(border-box);
+  background-color: #404040;
+  color: #fff;
+  font-weight: 300;
+}
+
+.workspace-viewer-name {
+  float: left;
+  line-height: @formControlHeight;
+}
+
+.workspace-viewer-actions {
+  float: right;
+  line-height: @formControlHeight;
+
+  a { color: inherit; }
+}
+
+.workspace-viewer-container {
+  height: 40vh;
+  padding: 5px 10px;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
