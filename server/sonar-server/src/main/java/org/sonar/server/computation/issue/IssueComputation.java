@@ -20,14 +20,19 @@
 package org.sonar.server.computation.issue;
 
 import com.google.common.collect.Sets;
+import org.sonar.api.CoreProperties;
 import org.sonar.api.issue.internal.DefaultIssue;
 import org.sonar.api.issue.internal.FieldDiffs;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.Duration;
 import org.sonar.api.utils.KeyValueFormat;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.batch.protocol.output.BatchReport;
 import org.sonar.core.rule.RuleDto;
 import org.sonar.server.computation.ComputationContext;
+import org.sonar.server.user.index.UserDoc;
+import org.sonar.server.user.index.UserIndex;
 import org.sonar.server.util.cache.DiskCache;
 
 import javax.annotation.Nullable;
@@ -36,21 +41,28 @@ import java.util.Date;
 
 public class IssueComputation {
 
+  private static final Logger LOG = Loggers.get(IssueComputation.class);
+
   private final RuleCache ruleCache;
   private final ScmAccountCache scmAccountCache;
   private final SourceLinesCache linesCache;
   private final DiskCache<DefaultIssue>.DiskAppender diskIssuesAppender;
+  private final UserIndex userIndex;
+  private boolean hasAssigneeBeenComputed = false;
+  private String defaultAssignee = null;
 
   public IssueComputation(RuleCache ruleCache, SourceLinesCache linesCache, ScmAccountCache scmAccountCache,
-    IssueCache issueCache) {
+    IssueCache issueCache, UserIndex userIndex) {
     this.ruleCache = ruleCache;
     this.linesCache = linesCache;
     this.scmAccountCache = scmAccountCache;
+    this.userIndex = userIndex;
     this.diskIssuesAppender = issueCache.newAppender();
   }
 
-  public void processComponentIssues(ComputationContext context, String componentUuid, Iterable<BatchReport.Issue> issues, @Nullable String defaultAssignee) {
+  public void processComponentIssues(ComputationContext context, String componentUuid, Iterable<BatchReport.Issue> issues) {
     linesCache.init(componentUuid);
+    String defaultAssignee = defaultAssignee(context.getProjectSettings().getString(CoreProperties.DEFAULT_ISSUE_ASSIGNEE));
     for (BatchReport.Issue reportIssue : issues) {
       DefaultIssue issue = toDefaultIssue(context, componentUuid, reportIssue);
       if (issue.isNew()) {
@@ -129,6 +141,20 @@ public class IssueComputation {
   private void copyRuleTags(DefaultIssue issue) {
     RuleDto rule = ruleCache.get(issue.ruleKey());
     issue.setTags(Sets.union(rule.getTags(), rule.getSystemTags()));
+  }
+
+  private String defaultAssignee(String login) {
+    if (!hasAssigneeBeenComputed) {
+      hasAssigneeBeenComputed = true;
+      UserDoc user = userIndex.getNullableByLogin(login);
+      if (user == null) {
+        LOG.info("the {} property was set with an unknown login: {}", CoreProperties.DEFAULT_ISSUE_ASSIGNEE, login);
+      } else {
+        defaultAssignee = login;
+      }
+    }
+
+    return defaultAssignee;
   }
 
 }

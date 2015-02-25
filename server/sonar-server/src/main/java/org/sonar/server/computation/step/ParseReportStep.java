@@ -20,9 +20,7 @@
 
 package org.sonar.server.computation.step;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.FileUtils;
-import org.sonar.api.CoreProperties;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.utils.TempFolder;
 import org.sonar.api.utils.log.Logger;
@@ -32,17 +30,11 @@ import org.sonar.batch.protocol.output.BatchReport;
 import org.sonar.core.computation.db.AnalysisReportDto;
 import org.sonar.core.persistence.DbSession;
 import org.sonar.core.persistence.MyBatis;
-import org.sonar.core.user.UserDto;
 import org.sonar.server.computation.ComputationContext;
 import org.sonar.server.computation.issue.IssueComputation;
 import org.sonar.server.db.DbClient;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import java.io.File;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.sonar.api.CoreProperties.DEFAULT_ISSUE_ASSIGNEE;
 
 public class ParseReportStep implements ComputationStep {
 
@@ -77,7 +69,7 @@ public class ParseReportStep implements ComputationStep {
 
       // and parse!
       int rootComponentRef = reportMetadata.getRootComponentRef();
-      recursivelyProcessComponent(reader, context, rootComponentRef, defaultAssignee(context.getProjectSettings().getString(DEFAULT_ISSUE_ASSIGNEE)));
+      recursivelyProcessComponent(reader, context, rootComponentRef);
       issueComputation.afterReportProcessing();
 
     } finally {
@@ -98,31 +90,14 @@ public class ParseReportStep implements ComputationStep {
       stopTime - startTime, FileUtils.byteCountToDisplaySize(FileUtils.sizeOf(toDir)), report.getProjectKey()));
   }
 
-  private void recursivelyProcessComponent(BatchOutputReader reportReader, ComputationContext context, int componentRef, @Nullable String defaultAssignee) {
+  private void recursivelyProcessComponent(BatchOutputReader reportReader, ComputationContext context, int componentRef) {
     BatchReport.Component component = reportReader.readComponent(componentRef);
     if (component != null) {
-      issueComputation.processComponentIssues(context, component.getUuid(), reportReader.readComponentIssues(componentRef), defaultAssignee);
+      issueComputation.processComponentIssues(context, component.getUuid(), reportReader.readComponentIssues(componentRef));
       for (Integer childRef : component.getChildRefsList()) {
-        recursivelyProcessComponent(reportReader, context, childRef, defaultAssignee);
+        recursivelyProcessComponent(reportReader, context, childRef);
       }
     }
-  }
-
-  @VisibleForTesting
-  @CheckForNull
-  String defaultAssignee(String defaultAssignee) {
-    String assignee = defaultAssignee;
-    if (!isNullOrEmpty(defaultAssignee)) {
-      try (DbSession session = dbClient.openSession(false)) {
-        UserDto user = dbClient.userDao().selectActiveUserByLogin(session, assignee);
-        if (user == null) {
-          LOG.info("the {} property was set with an unknown login: {}", CoreProperties.DEFAULT_ISSUE_ASSIGNEE, defaultAssignee);
-          assignee = null;
-        }
-      }
-    }
-
-    return assignee;
   }
 
   @Override
